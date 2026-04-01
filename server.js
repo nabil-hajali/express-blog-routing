@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -43,14 +43,53 @@ const posts = [
   }
 ];
 
+
+// server entry point
 app.get('/', (req, res) => {
   res.send('Server del mio blog');
 });
 
+
+// Index
 app.get('/bacheca', (req, res) => {
   res.json({ posts });
 });
 
+// Show
+app.get('/bacheca/:id', (req, res) => {
+  const postId = parseInt(req.params.id);
+  const post = posts.find(p => p.id === postId);
+  if (post) {
+    res.json({ post });
+  } else {
+    res.status(404).json({ error: 'Post non trovato' });
+  }
+
+
+  // Store
+  app.post('/bacheca', (req, res) => {
+    res.send('Create new post');
+  });
+
+
+
+
+  // Update
+  app.put('/bacheca/:id', (req, res) => {
+    res.send(`Update post with id ${req.params.id}`);
+  });
+
+  // Modify
+  app.patch('/bacheca/:id', (req, res) => {
+    res.send(`Modify post with id ${req.params.id}`);
+  });
+
+  // Destroy
+  app.delete('/bacheca/:id', (req, res) => {
+    res.send(`Delete post with id ${req.params.id}`);
+  });
+});
+
 app.listen(PORT, () => {
-  console.log(`Server avviato su http://localhost:${PORT}`);
+  console.log(`Server avviato su http://localhost:${PORT}`)
 });
